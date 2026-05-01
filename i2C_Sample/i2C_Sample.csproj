@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>i2C_Sample</RootNamespace>
     <AssemblyName>i2C_Sample</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,18 +58,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" Condition="'$(Configuration)|$(Platform)' == '2_19_4_4|AnyCPU'">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Common\2_19_4_4\Plugin.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" Condition="'$(Configuration)|$(Platform)' == '3_0_1_0|AnyCPU'">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Common\3_0_1_0\Plugin.dll</HintPath>
-    </Reference>
-    <Reference Include="Plugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" Condition="'$(Configuration)|$(Platform)' == '3_0_15_2|AnyCPU'">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Common\3_0_15_2\Plugin.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -81,6 +70,12 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plugin\Plugin.csproj">
+      <Project>{192437a5-3030-4606-bb5a-2c86ece66aef}</Project>
+      <Name>Plugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
