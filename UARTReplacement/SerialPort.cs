@@ -325,56 +325,13 @@ namespace Plugins.UARTReplacement
                 bool resetESP = (ResetByte & 128) == 128;
                 if (resetESP)
                 {
-                    // ---- Hardware reset, real-Next-equivalent ----
-                    //
-                    // On a real Next, NextReg 0x02 bit 7 drives the on-board
-                    // ESP's /RST pin directly through the FPGA. We reproduce
-                    // that on a PC-attached USB-serial adapter by pulsing the
-                    // adapter's hardware control lines.
-                    //
-                    // There are TWO commonly-wired ESP reset patterns and a
-                    // given adapter typically only supports one. We drive both
-                    // simultaneously so the same plugin code resets either
-                    // family of adapter:
-                    //
-                    //  (a) Plain ESP-01S programmer with RTS -> /RST resistor:
-                    //      asserting RTS pulls /RST low, releasing RTS lets it
-                    //      float high. Just RTS suffices.
-                    //
-                    //  (b) NodeMCU / esptool auto-reset circuit (DTR+RTS into
-                    //      a transistor pair): {DTR=H, RTS=L} pulls /RST low,
-                    //      {DTR=L, RTS=H} pulls GPIO0 low (boot mode), and the
-                    //      complement of either restores normal run. We want
-                    //      run mode after the pulse, so we drive RTS asserted
-                    //      with DTR de-asserted on entry, and clear both on
-                    //      release. That sequence drives /RST low cleanly on
-                    //      the auto-reset circuit and is benign on the simple
-                    //      RTS-only adapter (DTR is unconnected).
-                    //
-                    // Adapters with NEITHER line wired through to /RST cannot
-                    // be reset by the plugin -- there's no software path to
-                    // /RST that doesn't go through one of these pins. Those
-                    // need a manual reset button or a USB power-cycle. We log
-                    // the attempt so users can correlate plugin behavior with
-                    // their hardware.
-                    Console.WriteLine(UARTReplacement_Device.PluginName + "/RST asserted (DTR=False, RTS=True)");
-                    port.DtrEnable = false;
+                    Console.WriteLine(UARTReplacement_Device.PluginName + "RTS=" + resetESP + " (drive /RST low)");
                     port.RtsEnable = true;
-                    // Discard anything queued at this point -- whatever the ESP
-                    // had buffered to send is invalid post-reset, and any RX
-                    // event handler firing in mid-reset is just noise.
-                    port.DiscardInBuffer();
                 }
                 else
                 {
-                    Console.WriteLine(UARTReplacement_Device.PluginName + "/RST released (DTR=False, RTS=False)");
+                    Console.WriteLine(UARTReplacement_Device.PluginName + "RTS=" + resetESP + " (release /RST high)");
                     port.RtsEnable = false;
-                    port.DtrEnable = false;
-                    // Drop the boot-loader's 74880-baud startup chatter that
-                    // hits the line during the first ~250 ms after release;
-                    // sampled at 115200 it's gibberish that confuses the next
-                    // ATE0 echo check on the Z80 side.
-                    port.DiscardInBuffer();
                 }
             }
             catch (Exception ex)
